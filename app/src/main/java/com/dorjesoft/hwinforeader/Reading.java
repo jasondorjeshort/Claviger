@@ -13,6 +13,7 @@ public class Reading {
     final String labelUser;
     final String units;
     final double value, vMin, vMax, vAvg;
+
     Reading(byte[] b, int offset) {
         type = Type.fromInt(NetUtils.scanDwordInt(b, offset + 0));
         sensorIndex = (int) NetUtils.scanDwordInt(b, offset + 4);

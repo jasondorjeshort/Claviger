@@ -125,7 +125,7 @@ public class NetUtils {
 
     public static double scanDouble(byte[] b, int offset) {
         /*
-		 * int[] binary = new int[64]; String str = "";
+         * int[] binary = new int[64]; String str = "";
 		 *
 		 * byte[] b = new byte[8];
 		 *

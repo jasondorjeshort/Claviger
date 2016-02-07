@@ -45,37 +45,7 @@ public class ReaderTest {
 
             System.out.println("Read full hwrp of length " + len);
 
-            String sig = NetUtils.scanDwordString(b, 0);
-            long version = NetUtils.scanDwordInt(b, 4);
-            long revision = NetUtils.scanDwordInt(b, 8);
-            if (!sig.equals("SiWH") || version != 1 || revision != 0) {
-                System.out.println("Sig: " + sig + "; version: " + version + "; revision: " + revision);
-                throw new RuntimeException();
-            }
-            long timeStamp = NetUtils.scanLong(b, 12);
-            System.out.println("Timestamp: " + timeStamp);
-            int sensorOffset = (int) NetUtils.scanDwordInt(b, 20);
-            int sensorSize = (int) NetUtils.scanDwordInt(b, 24);
-            int sensorCount = (int) NetUtils.scanDwordInt(b, 28);
-            System.out.println(
-                    "Sensor section: " + sensorOffset + " offset, " + sensorSize + " size, " + sensorCount + " count.");
-
-            Sensor[] sensors = new Sensor[sensorCount];
-            for (int i = 0; i < sensorCount; i++) {
-                sensors[i] = new Sensor(b, sensorOffset + i * sensorSize);
-                System.out.println(sensors[i].toString());
-            }
-
-            int readingOffset = (int) NetUtils.scanDwordInt(b, 32);
-            int readingSize = (int) NetUtils.scanDwordInt(b, 36);
-            int readingCount = (int) NetUtils.scanDwordInt(b, 40);
-            System.out.println("Reading section: " + readingOffset + " offset, " + readingSize + " size, "
-                    + readingCount + " count.");
-            Reading[] readings = new Reading[readingCount];
-            for (int i = 0; i < readingCount; i++) {
-                readings[i] = new Reading(b, readingOffset + i * readingSize);
-                System.out.println(readings[i].toString());
-            }
+            Hwinfo hwinfo = new Hwinfo(b);
 
             System.out.println("Reading one more...");
             is.read(b, 0, 1);
@@ -114,7 +84,7 @@ public class ReaderTest {
             }
         }.start();
 
-        try (Socket s = new Socket("192.168.1.101", 27007)) {
+        try (Socket s = new Socket("192.168.1.100", 27007)) {
 
             System.out.println("connected?");
 
