@@ -14,6 +14,7 @@ public class Reading {
     final String units;
     final double value, vMin, vMax, vAvg;
 
+    // creates a reading from a standard reader binary data
     Reading(byte[] b, int offset) {
         type = Type.fromInt(NetUtils.scanDwordInt(b, offset + 0));
         sensorIndex = (int) NetUtils.scanDwordInt(b, offset + 4);

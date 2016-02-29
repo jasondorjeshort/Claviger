@@ -10,6 +10,7 @@ public class Sensor {
     final String nameOrig;
     final String nameUser;
 
+    // creates a sensor from a standard reader binary data
     Sensor(byte[] b, int offset) {
         id = NetUtils.scanDwordInt(b, offset + 0);
         instance = (int) NetUtils.scanDwordInt(b, offset + 4);

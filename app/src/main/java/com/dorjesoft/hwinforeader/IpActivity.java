@@ -9,7 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class IpActivity extends AppCompatActivity {
+public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
+
+    String IP = "192.168.1.100";
+    int PORT = 27007;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +30,7 @@ public class IpActivity extends AppCompatActivity {
             }
         });
 
-        new Thread() {
-            public void run() {
-                ReaderTest.read();
-            }
-        }.start();
+       StandardReader r = new StandardReader(this, IP, PORT);
     }
 
     @Override
@@ -54,5 +53,10 @@ public class IpActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setHwinfo(Hwinfo hwinfo) {
+
     }
 }

@@ -9,14 +9,14 @@ import java.net.Socket;
 /**
  * Created by jdorje on 2/6/2016.
  */
-public class ReaderTest {
+public class StandardReader {
 
 
     static boolean mRead = false;
     static Object mLock = new Object();
 
 
-    public static void writeHwrc(OutputStream os) throws IOException {
+    public  void writeHwrc(OutputStream os) throws IOException {
         NetUtils.writeDword(os, "HWRC");
         NetUtils.writeDword(os, 2);
         for (int i = 0; i < 30; i++) {
@@ -26,7 +26,7 @@ public class ReaderTest {
     }
 
 
-    public static void readPacket(InputStream is) throws IOException {
+    public  void readPacket(InputStream is) throws IOException {
         String packet = NetUtils.readDwordString(is);
         long cmd = NetUtils.readDwordInt(is);
         long len = NetUtils.readDwordInt(is);
@@ -47,10 +47,7 @@ public class ReaderTest {
 
             Hwinfo hwinfo = new Hwinfo(b);
 
-            System.out.println("Reading one more...");
-            is.read(b, 0, 1);
-            System.out.println("Read one more...");
-            System.exit(0);
+            mCallback.setHwinfo(hwinfo);
         } else
 
         {
@@ -60,45 +57,34 @@ public class ReaderTest {
 
     }
 
-    public static void read() {
+    final Hwinfo.Callback mCallback;
+    final String mIp;
+    final int mPort;
+
+    public StandardReader(Hwinfo.Callback cb, String ip, int port) {
+        mCallback = cb;
+        mIp = ip;
+        mPort = port;
 
         new Thread() {
+            @Override
             public void run() {
-                while (true) {
-                    try {
-                        sleep(10 * 1000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                try (Socket s = new Socket(mIp, mPort)) {
+
+                    System.out.println("connected?");
+
+                    writeHwrc(s.getOutputStream());
+                    while (true) {
+                        readPacket(s.getInputStream());
                     }
 
-                    boolean r;
-                    synchronized (mLock) {
-                        r = mRead;
-                        mRead = false;
-                    }
-
-                    System.out.println("Exiting due to time.");
-                    System.exit(0);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
+                System.out.println("closed");
             }
-        }.start();
-
-        try (Socket s = new Socket("192.168.1.100", 27007)) {
-
-            System.out.println("connected?");
-
-            writeHwrc(s.getOutputStream());
-            while (true) {
-                readPacket(s.getInputStream());
-            }
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        System.out.println("closed");
-
+        };
     }
 
 

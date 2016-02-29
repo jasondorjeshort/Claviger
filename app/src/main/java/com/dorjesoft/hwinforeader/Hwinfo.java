@@ -4,6 +4,12 @@ package com.dorjesoft.hwinforeader;
  * Created by jdorje on 2/6/2016.
  */
 public class Hwinfo {
+
+
+    public interface Callback {
+        public void setHwinfo(Hwinfo hwinfo);
+    }
+
     final long version, revision;
     final int sensorCount;
     final Sensor[] sensors;
@@ -11,6 +17,7 @@ public class Hwinfo {
     final int readingCount;
     final Reading[] readings;
 
+    // creates a hwinfo from a standard reader binary data
     public Hwinfo(byte[] b) {
         String sig = NetUtils.scanDwordString(b, 0);
         version = NetUtils.scanDwordInt(b, 4);
