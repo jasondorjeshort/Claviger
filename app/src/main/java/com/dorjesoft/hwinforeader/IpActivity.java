@@ -5,14 +5,20 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     String IP = "192.168.1.100";
     int PORT = 27007;
+
+    public final List<StandardReader> readers = new LinkedList<StandardReader>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,8 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         setContentView(R.layout.activity_ip);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Log.d("hwinfo", "Hwinfo create.");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -30,7 +38,29 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             }
         });
 
-       StandardReader r = new StandardReader(this, IP, PORT);
+        readers.add(new StandardReader(this, IP, PORT));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("hwinfo", "Hwinfo resume.");
+
+        for (StandardReader r : readers) {
+            r.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d("hwinfo", "Hwinfo pause.");
+
+        for (StandardReader r : readers) {
+            r.pause();
+        }
     }
 
     @Override
