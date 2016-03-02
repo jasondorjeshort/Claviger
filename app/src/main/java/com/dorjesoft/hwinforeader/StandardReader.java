@@ -66,15 +66,29 @@ public class StandardReader {
         mThread = new Thread() {
             @Override
             public void run() {
+                /*
+                 * The loop re-uses the connection but if the connection is broken it stays
+                 * within the outer loop.
+                 */
                 while (isRunning()) {
                     Log.d("hwinfo", "Hwinfo connecting.");
                     try (Socket s = new Socket(mIp, mPort)) {
-
+                        OutputStream os = s.getOutputStream();
+                        InputStream is = s.getInputStream();
                         Log.d("hwinfo", "Hwinfo connected.");
 
-                        writeHwrc(s.getOutputStream());
-                        InputStream is = s.getInputStream();
-                        while (!readPacket(is)) {
+                        while (isRunning()) {
+                            Log.d("hwinfo", "Hwinfo requesting packet.");
+                            writeHwrc(os);
+                            while (!readPacket(is)) {
+
+                            }
+                            try {
+                                Thread.sleep(10 * 1000);
+                            } catch (InterruptedException e) {
+                                // nothing/expected but probably breaks
+                            }
+                            Log.d("hwinfo", "Hwinfo continuance.");
 
                         }
 
@@ -82,15 +96,7 @@ public class StandardReader {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-                    Log.d("hwinfo", "Hwinfo closed.");
 
-                    try {
-                        Thread.sleep(10 * 1000);
-                    } catch (InterruptedException e) {
-                        // nothing/expected but probably breaks
-                    }
-
-                    Log.d("hwinfo", "Hwinfo continuance.");
                 }
             }
         };
