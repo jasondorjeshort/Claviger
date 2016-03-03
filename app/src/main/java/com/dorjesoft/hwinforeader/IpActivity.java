@@ -9,16 +9,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
-
     String IP = "192.168.1.100";
     int PORT = 27007;
 
     public final List<StandardReader> readers = new LinkedList<StandardReader>();
+
+    private TableLayout table;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,8 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         });
 
         readers.add(new StandardReader(this, IP, PORT));
+
+        table = (TableLayout) findViewById(R.id.table);
     }
 
     @Override
@@ -85,8 +91,45 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void setHwinfo(Hwinfo hwinfo) {
+    private void createHwinfo(Hwinfo hwinfo) {
 
+        for (Reading r : hwinfo.readings) {
+            TableRow tr = new TableRow(this);
+
+            TextView tv = new TextView(this);
+            tv.setText(r.getLabel());
+            tr.addView(tv);
+
+            tv = new TextView(this);
+            tv.setTag(r.mLabelOrig);
+            tv.setText(r.format());
+            tr.addView(tv);
+
+            table.addView(tr);
+        }
+
+    }
+
+    protected void mySetHwinfo(Hwinfo hwinfo) {
+        for (Reading r : hwinfo.readings) {
+            TextView tv = (TextView) table.findViewWithTag(r.mLabelOrig);
+
+            if (tv == null) {
+                createHwinfo(hwinfo);
+                tv = (TextView) table.findViewWithTag(r.mLabelOrig);
+            }
+
+            tv.setText(r.format());
+        }
+    }
+
+    @Override
+    public void setHwinfo(final Hwinfo hwinfo) {
+        table.post(new Runnable() {
+            @Override
+            public void run() {
+                mySetHwinfo(hwinfo);
+            }
+        });
     }
 }

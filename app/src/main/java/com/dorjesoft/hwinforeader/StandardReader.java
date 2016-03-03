@@ -33,7 +33,6 @@ public class StandardReader {
                 NetUtils.readDwordInt(is);
             }
         } else if (packet.equals("HWRP")) {
-
             byte[] b = new byte[(int) len];
 
             NetUtils.forceRead(is, b);
@@ -45,9 +44,7 @@ public class StandardReader {
             mCallback.setHwinfo(hwinfo);
 
             return true;
-        } else
-
-        {
+        } else {
             System.out.println("Unknown packet " + packet);
             throw new RuntimeException();
         }
@@ -91,13 +88,13 @@ public class StandardReader {
                             Log.d("hwinfo", "Hwinfo continuance.");
 
                         }
-
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
-
                 }
+
+                Log.d("hwinfo", "Hwinfo thread done.");
             }
         };
 

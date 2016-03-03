@@ -12,8 +12,9 @@
     tools:context="com.dorjesoft.hwinforeader.IpActivity"
     tools:showIn="@layout/activity_ip">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World B!" />
+        android:stretchColumns="1"/>
 </ScrollView>
