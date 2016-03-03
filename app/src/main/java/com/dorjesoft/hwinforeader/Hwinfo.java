@@ -17,8 +17,12 @@ public class Hwinfo {
     final int readingCount;
     final Reading[] readings;
 
+    final StandardReader mReader;
+
     // creates a hwinfo from a standard reader binary data
-    public Hwinfo(byte[] b) {
+    public Hwinfo(StandardReader reader, byte[] b) {
+        mReader = reader;
+
         String sig = NetUtils.scanDwordString(b, 0);
         version = NetUtils.scanDwordInt(b, 4);
         revision = NetUtils.scanDwordInt(b, 8);

@@ -42,7 +42,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             }
         });
 
-        readers.add(new StandardReader(this, IP, PORT));
+        readers.add(new StandardReader(readers.size(), this, IP, PORT));
 
         table = (TableLayout) findViewById(R.id.table);
     }
