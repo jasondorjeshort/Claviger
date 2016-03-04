@@ -93,7 +93,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     private void createHwinfo(Hwinfo hwinfo) {
 
-        for (Reading r : hwinfo.readings) {
+        for (Reading r : hwinfo.getReadings()) {
             TableRow tr = new TableRow(this);
 
             TextView tv = new TextView(this);
@@ -111,7 +111,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     }
 
     protected void mySetHwinfo(Hwinfo hwinfo) {
-        for (Reading r : hwinfo.readings) {
+        for (Reading r : hwinfo.getReadings()) {
             TextView tv = (TextView) table.findViewWithTag(r.getLabelOrig());
 
             if (tv == null) {

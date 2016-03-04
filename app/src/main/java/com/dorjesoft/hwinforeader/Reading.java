@@ -5,8 +5,6 @@ package com.dorjesoft.hwinforeader;
  */
 public class Reading {
     private final Type mType;
-
-
     private final int mSensorIndex;
     private final int mReadingId;
     private final String mLabelOrig;
@@ -15,7 +13,7 @@ public class Reading {
     private final double mValue, mMin, mMax, mAvg;
 
     // creates a reading from a standard reader binary data
-   public Reading(byte[] b, int offset) {
+    public Reading(byte[] b, int offset) {
         mType = Type.fromInt(NetUtils.scanDwordInt(b, offset + 0));
         mSensorIndex = (int) NetUtils.scanDwordInt(b, offset + 4);
         mReadingId = (int) NetUtils.scanDwordInt(b, offset + 8);

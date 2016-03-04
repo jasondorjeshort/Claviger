@@ -5,10 +5,10 @@ package com.dorjesoft.hwinforeader;
  */
 public class Sensor {
 
-    final long id;
-    final int instance;
-    final String nameOrig;
-    final String nameUser;
+    private final long id;
+    private final int instance;
+    private final String nameOrig;
+    private final String nameUser;
 
     // creates a sensor from a standard reader binary data
     Sensor(byte[] b, int offset) {

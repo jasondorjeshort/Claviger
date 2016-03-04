@@ -11,6 +11,12 @@ import java.net.Socket;
  * Created by jdorje on 2/6/2016.
  */
 public class StandardReader {
+    private final Hwinfo.Callback mCallback;
+    private final String mIp;
+    private final int mPort;
+    private Thread mThread;
+    private boolean mRunning = false;
+    private final int mId;
 
     public void writeHwrc(OutputStream os) throws IOException {
         NetUtils.writeDword(os, "HWRC");
@@ -52,13 +58,6 @@ public class StandardReader {
 
         return false;
     }
-
-    private final Hwinfo.Callback mCallback;
-    private final String mIp;
-    private final int mPort;
-    private Thread mThread;
-    private boolean mRunning = false;
-    private final int mId;
 
     public void resume() {
         mRunning = true;
