@@ -97,11 +97,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             TableRow tr = new TableRow(this);
 
             TextView tv = new TextView(this);
-            tv.setText(r.getLabel());
+            tv.setText(r.getLabelUser());
             tr.addView(tv);
 
             tv = new TextView(this);
-            tv.setTag(r.mLabelOrig);
+            tv.setTag(r.getLabelOrig());
             tv.setText(r.format());
             tr.addView(tv);
 
@@ -112,11 +112,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     protected void mySetHwinfo(Hwinfo hwinfo) {
         for (Reading r : hwinfo.readings) {
-            TextView tv = (TextView) table.findViewWithTag(r.mLabelOrig);
+            TextView tv = (TextView) table.findViewWithTag(r.getLabelOrig());
 
             if (tv == null) {
                 createHwinfo(hwinfo);
-                tv = (TextView) table.findViewWithTag(r.mLabelOrig);
+                tv = (TextView) table.findViewWithTag(r.getLabelOrig());
             }
 
             tv.setText(r.format());
