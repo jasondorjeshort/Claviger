@@ -1,5 +1,7 @@
 package com.dorjesoft.hwinforeader;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,7 +16,7 @@ public class NetUtils {
             return '-';
         }
         char table[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        // System.out.println("Hex of " + b + " is " + table[b]);
+        // Log.d("hwinfo", "Hex of " + b + " is " + table[b]);
         return table[b];
     }
 
@@ -61,7 +63,7 @@ public class NetUtils {
             throw new RuntimeException();
         }
 
-        System.out.println("> " + wordo + " > " + hex(b));
+        Log.d("hwinfo", "> " + wordo + " > " + hex(b));
         os.write(b);
     }
 
@@ -75,7 +77,7 @@ public class NetUtils {
 
         }
 
-        System.out.println("> " + word + " > " + hex(b));
+        Log.d("hwinfo", "> " + word + " > " + hex(b));
         os.write(b);
     }
 
@@ -86,7 +88,7 @@ public class NetUtils {
             word += ((char) b[offset + 3 - i]);
         }
 
-        // System.out.println("< " + word + " < " + hex(b));
+        // Log.d("hwinfo", "< " + word + " < " + hex(b));
 
         return word;
     }
@@ -98,7 +100,7 @@ public class NetUtils {
             word = word * 256 + (k & 0xFF);
         }
 
-        // System.out.println("< " + word + " < " + hex(b));
+        // Log.d("hwinfo", "< " + word + " < " + hex(b));
 
         return word;
     }
@@ -118,7 +120,7 @@ public class NetUtils {
         long l1 = scanDwordInt(b, offset);
         long l2 = scanDwordInt(b, offset + 4);
 
-        System.out.println("Long: " + l1 + "_" + l2 + " = ");
+        Log.d("hwinfo", "Long: " + l1 + "_" + l2 + " = ");
 
         return (l1 << 32) + l2;
     }
@@ -140,7 +142,7 @@ public class NetUtils {
 		 *
 		 * if (i % 8 == 7) { str += " "; } }
 		 *
-		 * String hex = hex(b); System.out.println("> " + "." + " > " + str +
+		 * String hex = hex(b); Log.d("hwinfo", "> " + "." + " > " + str +
 		 * " > " + hex);
 		 */
 

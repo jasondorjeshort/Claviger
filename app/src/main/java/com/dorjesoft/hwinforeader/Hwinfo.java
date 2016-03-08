@@ -1,11 +1,11 @@
 package com.dorjesoft.hwinforeader;
 
+import android.util.Log;
+
 /**
  * Created by jdorje on 2/6/2016.
  */
 public class Hwinfo {
-
-
     public interface Callback {
         public void setHwinfo(Hwinfo hwinfo);
     }
@@ -27,32 +27,32 @@ public class Hwinfo {
         mVersion = NetUtils.scanDwordInt(b, 4);
         mRevision = NetUtils.scanDwordInt(b, 8);
         if (!sig.equals("SiWH") || mVersion != 1 || mRevision != 0) {
-            System.out.println("Sig: " + sig + "; version: " + mVersion + "; revision: " + mRevision);
+            Log.d("hwinfo", "Sig: " + sig + "; version: " + mVersion + "; revision: " + mRevision);
             throw new RuntimeException();
         }
         long timeStamp = NetUtils.scanLong(b, 12);
-        System.out.println("Timestamp: " + timeStamp);
+        Log.d("hwinfo", "Timestamp: " + timeStamp);
         int sensorOffset = (int) NetUtils.scanDwordInt(b, 20);
         int sensorSize = (int) NetUtils.scanDwordInt(b, 24);
         mSensorCount = (int) NetUtils.scanDwordInt(b, 28);
-        System.out.println(
-                "Sensor section: " + sensorOffset + " offset, " + sensorSize + " size, " + mSensorCount + " count.");
+        Log.d("hwinfo", "Sensor section: " + sensorOffset + " offset, "
+                + sensorSize + " size, " + mSensorCount + " count.");
 
         mSensors = new Sensor[mSensorCount];
         for (int i = 0; i < mSensorCount; i++) {
             mSensors[i] = new Sensor(b, sensorOffset + i * sensorSize);
-            System.out.println(mSensors[i].toString());
+            Log.d("hwinfo", mSensors[i].toString());
         }
 
         int readingOffset = (int) NetUtils.scanDwordInt(b, 32);
         int readingSize = (int) NetUtils.scanDwordInt(b, 36);
         mReadingCount = (int) NetUtils.scanDwordInt(b, 40);
-        System.out.println("Reading section: " + readingOffset + " offset, " + readingSize + " size, "
-                + mReadingCount + " count.");
+        Log.d("hwinfo", "Reading section: " + readingOffset + " offset, "
+                + readingSize + " size, " + mReadingCount + " count.");
         mReadings = new Reading[mReadingCount];
         for (int i = 0; i < mReadingCount; i++) {
             mReadings[i] = new Reading(b, readingOffset + i * readingSize);
-            System.out.println(mReadings[i].toString());
+            Log.d("hwinfo", mReadings[i].toString());
         }
     }
 

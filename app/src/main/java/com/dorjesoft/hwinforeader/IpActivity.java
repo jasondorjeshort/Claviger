@@ -92,7 +92,6 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     }
 
     private void createHwinfo(Hwinfo hwinfo) {
-
         for (Reading r : hwinfo.getReadings()) {
             TableRow tr = new TableRow(this);
 

@@ -44,7 +44,7 @@ public class StandardReader {
 
             NetUtils.forceRead(is, b);
 
-            System.out.println("Read full hwrp of length " + len);
+            Log.d("hwinfo", "Read full hwrp of length " + len);
 
             Hwinfo hwinfo = new Hwinfo(this, b);
 
@@ -52,7 +52,7 @@ public class StandardReader {
 
             return true;
         } else {
-            System.out.println("Unknown packet " + packet);
+            Log.d("hwinfo", "Unknown packet " + packet);
             throw new RuntimeException();
         }
 
