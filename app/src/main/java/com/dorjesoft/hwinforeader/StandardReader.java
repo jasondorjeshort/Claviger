@@ -18,6 +18,14 @@ public class StandardReader {
     private boolean mRunning = false;
     private final int mId;
 
+    public String getIp() {
+        return mIp;
+    }
+
+    public int getPort() {
+        return mPort;
+    }
+
     public void writeHwrc(OutputStream os) throws IOException {
         NetUtils.writeDword(os, "HWRC");
         NetUtils.writeDword(os, 2);

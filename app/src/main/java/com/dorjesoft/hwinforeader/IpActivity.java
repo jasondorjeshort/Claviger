@@ -1,5 +1,7 @@
 package com.dorjesoft.hwinforeader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,12 +19,48 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
-    String IP = "192.168.1.100";
-    int PORT = 27007;
 
-    public final List<StandardReader> readers = new LinkedList<StandardReader>();
+    private final String PREFS = "HwinfoReaders";
+    private final String PREFS_IP = "reader_ip_";
+    private final String PREFS_PORT = "reader_port_";
 
-    private TableLayout table;
+    private int mMaxId = 0;
+    private final List<StandardReader> mReaders = new LinkedList<>();
+
+    private TableLayout mTable;
+
+    protected void loadReaders() {
+        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        for (int i = 0; ; i++) {
+            String ip = prefs.getString(PREFS_IP + i, null);
+            int port = prefs.getInt(PREFS_PORT + i, -1);
+
+            if (ip == null || port == -1) {
+                break;
+            }
+
+            mReaders.add(new StandardReader(++mMaxId, this, ip, port));
+        }
+
+        if (mReaders.size() == 0) {
+            String DEFAULT_IP = "192.168.1.100";
+            int DEFAULT_PORT = 27007;
+
+            mReaders.add(new StandardReader(++mMaxId, this, DEFAULT_IP, DEFAULT_PORT));
+        }
+    }
+
+    protected void saveReaders() {
+        SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        for (int i = 0; i < mReaders.size(); i++) {
+            StandardReader r = mReaders.get(i);
+            editor.putString(PREFS_IP + i, r.getIp());
+            editor.putInt(PREFS_PORT + i, r.getPort());
+        }
+        editor.apply();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +80,9 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             }
         });
 
-        readers.add(new StandardReader(readers.size(), this, IP, PORT));
+        mTable = (TableLayout) findViewById(R.id.table);
 
-        table = (TableLayout) findViewById(R.id.table);
+        loadReaders();
     }
 
     @Override
@@ -53,7 +91,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
         Log.d("hwinfo", "Hwinfo resume.");
 
-        for (StandardReader r : readers) {
+        for (StandardReader r : mReaders) {
             r.resume();
         }
     }
@@ -64,9 +102,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
         Log.d("hwinfo", "Hwinfo pause.");
 
-        for (StandardReader r : readers) {
+        for (StandardReader r : mReaders) {
             r.pause();
         }
+
+        saveReaders();
     }
 
     @Override
@@ -104,18 +144,18 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             tv.setText(r.format());
             tr.addView(tv);
 
-            table.addView(tr);
+            mTable.addView(tr);
         }
 
     }
 
     protected void mySetHwinfo(Hwinfo hwinfo) {
         for (Reading r : hwinfo.getReadings()) {
-            TextView tv = (TextView) table.findViewWithTag(r.getLabelOrig());
+            TextView tv = (TextView) mTable.findViewWithTag(r.getLabelOrig());
 
             if (tv == null) {
                 createHwinfo(hwinfo);
-                tv = (TextView) table.findViewWithTag(r.getLabelOrig());
+                tv = (TextView) mTable.findViewWithTag(r.getLabelOrig());
             }
 
             tv.setText(r.format());
@@ -124,7 +164,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     @Override
     public void setHwinfo(final Hwinfo hwinfo) {
-        table.post(new Runnable() {
+        mTable.post(new Runnable() {
             @Override
             public void run() {
                 mySetHwinfo(hwinfo);
