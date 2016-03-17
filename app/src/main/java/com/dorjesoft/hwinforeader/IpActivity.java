@@ -46,7 +46,8 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     protected void loadReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 
-        int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
+        //  int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
+        int numReaders = 0;
         for (int i = 0; i < numReaders; i++) {
             String ip = prefs.getString(PREFS_IP + i, null);
             int port = prefs.getInt(PREFS_PORT + i, -1);
@@ -106,7 +107,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             @Override
             public void onClick(View view) {
                 ServerDialog dFragment = new ServerDialog();
-                dFragment.setReaders(mReaders);
+                dFragment.setReaders(IpActivity.this, mReaders);
                 // Show DialogFragment
                 dFragment.show(fm, "Dialog Fragment");
             }
@@ -128,18 +129,6 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         }
     }
 
-    public void addServer(View v) {
-        TextView nameTv = (TextView) findViewById(R.id.reader_name_text);
-        TextView ipTv = (TextView) findViewById(R.id.reader_ip_text);
-        TextView portTv = (TextView) findViewById(R.id.reader_port_text);
-
-        String ip = ipTv.getText().toString();
-        int port = Integer.valueOf(portTv.getText().toString()).intValue();
-
-        StandardReader r = new StandardReader(++mMaxId, this, ip, port);
-        mReaders.add(r);
-        r.resume();
-    }
 
     @Override
     protected void onPause() {
