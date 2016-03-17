@@ -29,6 +29,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     private TableLayout mTable;
 
+    private final String PREFS_SHOW_MIN = "show_min";
+    private final String PREFS_SHOW_MAX = "show_max";
+    private final String PREFS_SHOW_AVG = "show_avg";
+    private boolean mShowMin, mShowMax, mShowAvg;
+
     protected void loadReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         for (int i = 0; ; i++) {
@@ -48,6 +53,21 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
             mReaders.add(new StandardReader(++mMaxId, this, DEFAULT_IP, DEFAULT_PORT));
         }
+
+        mShowMin = prefs.getBoolean(PREFS_SHOW_MIN, false);
+        mShowMax = prefs.getBoolean(PREFS_SHOW_MAX, false);
+        mShowAvg = prefs.getBoolean(PREFS_SHOW_AVG, false);
+
+        mTable.setColumnCollapsed(1, !mShowMin);
+        mTable.setColumnCollapsed(2, !mShowMax);
+        mTable.setColumnCollapsed(3, !mShowAvg);
+
+        if (false) {
+            MenuItem item;
+            ((MenuItem) findViewById(R.id.action_show_min)).setChecked(mShowMin);
+            ((MenuItem) findViewById(R.id.action_show_max)).setChecked(mShowMax);
+            ((MenuItem) findViewById(R.id.action_show_avg)).setChecked(mShowAvg);
+        }
     }
 
     protected void saveReaders() {
@@ -59,6 +79,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             editor.putString(PREFS_IP + i, r.getIp());
             editor.putInt(PREFS_PORT + i, r.getPort());
         }
+
+        editor.putBoolean(PREFS_SHOW_MIN, mShowMin);
+        editor.putBoolean(PREFS_SHOW_MAX, mShowMax);
+        editor.putBoolean(PREFS_SHOW_AVG, mShowAvg);
+
         editor.apply();
     }
 
@@ -113,6 +138,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_ip, menu);
+
+        menu.findItem(R.id.action_show_min).setChecked(mShowMin);
+        menu.findItem(R.id.action_show_max).setChecked(mShowMax);
+        menu.findItem(R.id.action_show_avg).setChecked(mShowAvg);
+
         return true;
     }
 
@@ -124,7 +154,22 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_show_min) {
+            mShowMin = !mShowMin;
+            item.setChecked(mShowMin);
+            mTable.setColumnCollapsed(1, !mShowMin);
+            return true;
+        }
+        if (id == R.id.action_show_max) {
+            mShowMax = !mShowMax;
+            item.setChecked(mShowMax);
+            mTable.setColumnCollapsed(2, !mShowMax);
+            return true;
+        }
+        if (id == R.id.action_show_avg) {
+            mShowAvg = !mShowAvg;
+            item.setChecked(mShowAvg);
+            mTable.setColumnCollapsed(3, !mShowAvg);
             return true;
         }
 
@@ -144,6 +189,21 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             tv.setText(r.format());
             tr.addView(tv);
 
+            tv = new TextView(this);
+            tv.setTag(r.getLabelOrig() + " min");
+            tv.setText(r.formatMin());
+            tr.addView(tv);
+
+            tv = new TextView(this);
+            tv.setTag(r.getLabelOrig() + " max");
+            tv.setText(r.formatMax());
+            tr.addView(tv);
+
+            tv = new TextView(this);
+            tv.setTag(r.getLabelOrig() + " avg");
+            tv.setText(r.formatAvg());
+            tr.addView(tv);
+
             mTable.addView(tr);
         }
 
@@ -159,6 +219,15 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             }
 
             tv.setText(r.format());
+
+            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " min");
+            tv.setText(r.formatMin());
+
+            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " max");
+            tv.setText(r.formatMax());
+
+            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " avg");
+            tv.setText(r.formatAvg());
         }
     }
 
