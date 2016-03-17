@@ -34,6 +34,10 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private final String PREFS_SHOW_AVG = "show_avg";
     private boolean mShowMin, mShowMax, mShowAvg;
 
+    private final int COLUMN_MIN = 1;
+    private final int COLUMN_MAX = 2;
+    private final int COLUMN_AVG = 3;
+
     protected void loadReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         for (int i = 0; ; i++) {
@@ -58,12 +62,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         mShowMax = prefs.getBoolean(PREFS_SHOW_MAX, false);
         mShowAvg = prefs.getBoolean(PREFS_SHOW_AVG, false);
 
-        mTable.setColumnCollapsed(1, !mShowMin);
-        mTable.setColumnCollapsed(2, !mShowMax);
-        mTable.setColumnCollapsed(3, !mShowAvg);
+        mTable.setColumnCollapsed(COLUMN_MIN, !mShowMin);
+        mTable.setColumnCollapsed(COLUMN_MAX, !mShowMax);
+        mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
 
         if (false) {
-            MenuItem item;
             ((MenuItem) findViewById(R.id.action_show_min)).setChecked(mShowMin);
             ((MenuItem) findViewById(R.id.action_show_max)).setChecked(mShowMax);
             ((MenuItem) findViewById(R.id.action_show_avg)).setChecked(mShowAvg);
@@ -157,19 +160,19 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         if (id == R.id.action_show_min) {
             mShowMin = !mShowMin;
             item.setChecked(mShowMin);
-            mTable.setColumnCollapsed(1, !mShowMin);
+            mTable.setColumnCollapsed(COLUMN_MIN, !mShowMin);
             return true;
         }
         if (id == R.id.action_show_max) {
             mShowMax = !mShowMax;
             item.setChecked(mShowMax);
-            mTable.setColumnCollapsed(2, !mShowMax);
+            mTable.setColumnCollapsed(COLUMN_MAX, !mShowMax);
             return true;
         }
         if (id == R.id.action_show_avg) {
             mShowAvg = !mShowAvg;
             item.setChecked(mShowAvg);
-            mTable.setColumnCollapsed(3, !mShowAvg);
+            mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
             return true;
         }
 
