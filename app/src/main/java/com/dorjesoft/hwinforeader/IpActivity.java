@@ -1,10 +1,12 @@
 package com.dorjesoft.hwinforeader;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +25,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private final String PREFS = "HwinfoReaders";
     private final String PREFS_IP = "reader_ip_";
     private final String PREFS_PORT = "reader_port_";
+    private final String PREFS_NUM_READERS = "num_readers";
 
     private int mMaxId = 0;
     private final List<StandardReader> mReaders = new LinkedList<>();
@@ -38,9 +41,13 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private final int COLUMN_MAX = 2;
     private final int COLUMN_AVG = 3;
 
+    private FragmentManager fm = getSupportFragmentManager();
+
     protected void loadReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        for (int i = 0; ; i++) {
+
+        int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
+        for (int i = 0; i < numReaders; i++) {
             String ip = prefs.getString(PREFS_IP + i, null);
             int port = prefs.getInt(PREFS_PORT + i, -1);
 
@@ -51,7 +58,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             mReaders.add(new StandardReader(++mMaxId, this, ip, port));
         }
 
-        if (mReaders.size() == 0) {
+        if (mReaders.size() == 0 && false) {
             String DEFAULT_IP = "192.168.1.100";
             int DEFAULT_PORT = 27007;
 
@@ -65,18 +72,13 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         mTable.setColumnCollapsed(COLUMN_MIN, !mShowMin);
         mTable.setColumnCollapsed(COLUMN_MAX, !mShowMax);
         mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
-
-        if (false) {
-            ((MenuItem) findViewById(R.id.action_show_min)).setChecked(mShowMin);
-            ((MenuItem) findViewById(R.id.action_show_max)).setChecked(mShowMax);
-            ((MenuItem) findViewById(R.id.action_show_avg)).setChecked(mShowAvg);
-        }
     }
 
     protected void saveReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
+        editor.putInt(PREFS_NUM_READERS, mReaders.size());
         for (int i = 0; i < mReaders.size(); i++) {
             StandardReader r = mReaders.get(i);
             editor.putString(PREFS_IP + i, r.getIp());
@@ -103,8 +105,10 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                ServerDialog dFragment = new ServerDialog();
+                dFragment.setReaders(mReaders);
+                // Show DialogFragment
+                dFragment.show(fm, "Dialog Fragment");
             }
         });
 
@@ -122,6 +126,19 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         for (StandardReader r : mReaders) {
             r.resume();
         }
+    }
+
+    public void addServer(View v) {
+        TextView nameTv = (TextView) findViewById(R.id.reader_name_text);
+        TextView ipTv = (TextView) findViewById(R.id.reader_ip_text);
+        TextView portTv = (TextView) findViewById(R.id.reader_port_text);
+
+        String ip = ipTv.getText().toString();
+        int port = Integer.valueOf(portTv.getText().toString()).intValue();
+
+        StandardReader r = new StandardReader(++mMaxId, this, ip, port);
+        mReaders.add(r);
+        r.resume();
     }
 
     @Override

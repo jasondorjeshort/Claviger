@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/reader_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:padding="10dp"
+        android:text="Name" />
+
+    <EditText
+        android:id="@+id/reader_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/reader_name_text"
+        android:hint="An Hwinfo Server"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/reader_ip_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_name"
+        android:padding="10dp"
+        android:text="IP: " />
+
+    <EditText
+        android:id="@+id/reader_ip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_name"
+        android:layout_toRightOf="@+id/reader_ip_text"
+        android:hint="192.168.1.100"
+        android:inputType="numberDecimal" />
+
+    <TextView
+        android:id="@+id/reader_port_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_ip_text"
+        android:padding="10dp"
+        android:text="Port" />
+
+    <EditText
+        android:id="@+id/reader_port"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_ip_text"
+        android:layout_toRightOf="@+id/reader_port_text"
+        android:hint="27007"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/reader_button_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_port_text"
+        android:onClick="addServer"
+        android:text="Add Server" />
+
+    <Button
+        android:id="@+id/reader_button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reader_port_text"
+        android:layout_toRightOf="@+id/reader_button_add"
+        android:onClick="cancelAddServer"
+        android:text="Cancel" />
+
+</RelativeLayout>
