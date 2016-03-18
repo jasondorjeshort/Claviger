@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.List;
-
 /**
- * Created by jdorj on 3/17/2016.
+ * Created by jdorje on 3/17/2016. Released under the GNU General Public Licence.
  */
 public class ServerDialog extends DialogFragment {
-
-    private Button mAddButton, mCancelButton;
     private TextView mName, mIp, mPort;
 
     private IpActivity mActivity;
@@ -31,8 +27,8 @@ public class ServerDialog extends DialogFragment {
         View rootView = inflater.inflate(R.layout.server_fragment, container,
                 false);
 
-        mAddButton = (Button) rootView.findViewById(R.id.reader_button_add);
-        mCancelButton = (Button) rootView.findViewById(R.id.reader_button_cancel);
+        Button mAddButton = (Button) rootView.findViewById(R.id.reader_button_add);
+        Button mCancelButton = (Button) rootView.findViewById(R.id.reader_button_cancel);
         mName = (TextView) rootView.findViewById(R.id.reader_name);
         mIp = (TextView) rootView.findViewById(R.id.reader_ip);
         mPort = (TextView) rootView.findViewById(R.id.reader_port);
@@ -60,7 +56,7 @@ public class ServerDialog extends DialogFragment {
         Log.d("hwinfo", "IP: " + mIp.getText() + "; port: " + mPort.getText());
 
         String ip = mIp.getText().toString();
-        int port = Integer.valueOf(mPort.getText().toString()).intValue();
+        int port = Integer.valueOf(mPort.getText().toString());
 
         StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, ip, port);
         mActivity.mReaders.add(r);

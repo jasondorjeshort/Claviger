@@ -1,11 +1,9 @@
 package com.dorjesoft.hwinforeader;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +18,15 @@ import android.widget.TextView;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Created by jdorje.  Released under the GNU General Public Licence.
+ */
 public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
-    private final String PREFS = "HwinfoReaders";
-    private final String PREFS_IP = "reader_ip_";
-    private final String PREFS_PORT = "reader_port_";
-    private final String PREFS_NUM_READERS = "num_readers";
+    private static final String PREFS = "HwinfoReaders";
+    private static final String PREFS_IP = "reader_ip_";
+    private static final String PREFS_PORT = "reader_port_";
+    private static final String PREFS_NUM_READERS = "num_readers";
 
     protected int mMaxId = 0;
     protected final List<StandardReader> mReaders = new LinkedList<>();
@@ -52,18 +53,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             String ip = prefs.getString(PREFS_IP + i, null);
             int port = prefs.getInt(PREFS_PORT + i, -1);
 
-            if (ip == null || port == -1) {
-                break;
-            }
-
             mReaders.add(new StandardReader(++mMaxId, this, ip, port));
-        }
-
-        if (mReaders.size() == 0 && false) {
-            String DEFAULT_IP = "192.168.1.100";
-            int DEFAULT_PORT = 27007;
-
-            mReaders.add(new StandardReader(++mMaxId, this, DEFAULT_IP, DEFAULT_PORT));
         }
 
         mShowMin = prefs.getBoolean(PREFS_SHOW_MIN, false);

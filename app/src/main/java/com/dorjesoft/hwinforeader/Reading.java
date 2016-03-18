@@ -1,7 +1,7 @@
 package com.dorjesoft.hwinforeader;
 
 /**
- * Created by jdorje on 2/6/2016.
+ * Created by jdorje on 2/6/2016. Released under the GNU General Public Licence.
  */
 public class Reading {
     private final Type mType;
