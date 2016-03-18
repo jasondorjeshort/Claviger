@@ -58,6 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reader_port_text"
+        android:layout_alignParentLeft="true"
         android:text="Add Server" />
 
     <Button
@@ -65,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reader_port_text"
-        android:layout_toRightOf="@+id/reader_button_add"
+        android:layout_alignParentRight="true"
         android:text="Cancel" />
 
 </RelativeLayout>

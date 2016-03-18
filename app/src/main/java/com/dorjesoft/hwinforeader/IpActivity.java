@@ -27,8 +27,8 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private final String PREFS_PORT = "reader_port_";
     private final String PREFS_NUM_READERS = "num_readers";
 
-    private int mMaxId = 0;
-    private final List<StandardReader> mReaders = new LinkedList<>();
+    protected int mMaxId = 0;
+    protected final List<StandardReader> mReaders = new LinkedList<>();
 
     private TableLayout mTable;
 
@@ -107,7 +107,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             @Override
             public void onClick(View view) {
                 ServerDialog dFragment = new ServerDialog();
-                dFragment.setReaders(IpActivity.this, mReaders);
+                dFragment.setReaders(IpActivity.this);
                 // Show DialogFragment
                 dFragment.show(fm, "Dialog Fragment");
             }

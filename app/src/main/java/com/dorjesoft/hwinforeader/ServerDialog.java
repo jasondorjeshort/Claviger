@@ -19,12 +19,10 @@ public class ServerDialog extends DialogFragment {
     private Button mAddButton, mCancelButton;
     private TextView mName, mIp, mPort;
 
-    private List<StandardReader> mReaders;
     private IpActivity mActivity;
 
-    public void setReaders(IpActivity activity, List<StandardReader> readers) {
+    public void setReaders(IpActivity activity) {
         mActivity = activity;
-        mReaders = readers;
     }
 
     @Override
@@ -64,8 +62,8 @@ public class ServerDialog extends DialogFragment {
         String ip = mIp.getText().toString();
         int port = Integer.valueOf(mPort.getText().toString()).intValue();
 
-        StandardReader r = new StandardReader(1000, mActivity, ip, port);
-        mReaders.add(r);
+        StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, ip, port);
+        mActivity.mReaders.add(r);
         r.resume();
         dismiss();
     }
