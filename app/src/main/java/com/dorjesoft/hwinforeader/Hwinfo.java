@@ -60,4 +60,8 @@ public class Hwinfo {
         return mReadings;
     }
 
+    public String getName() {
+        return mReader.getName();
+    }
+
 }

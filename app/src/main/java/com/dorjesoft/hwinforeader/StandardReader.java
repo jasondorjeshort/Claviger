@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 /**
- * Created by jdorje on 2/6/2016.
+ * Created by jdorje on 2/6/2016. Released under the GNU General Public Licence.
  */
 public class StandardReader {
     private final Hwinfo.Callback mCallback;
@@ -17,9 +17,18 @@ public class StandardReader {
     private Thread mThread;
     private boolean mRunning = false;
     private final int mId;
+    private final String mName;
 
     public String getIp() {
         return mIp;
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public String getName() {
+        return mName;
     }
 
     public int getPort() {
@@ -123,7 +132,8 @@ public class StandardReader {
         mThread.interrupt();
     }
 
-    public StandardReader(int id, Hwinfo.Callback cb, String ip, int port) {
+    public StandardReader(int id, Hwinfo.Callback cb, String name, String ip, int port) {
+        mName = name;
         mId = id;
         mCallback = cb;
         mIp = ip;

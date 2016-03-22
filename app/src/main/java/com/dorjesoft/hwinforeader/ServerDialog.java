@@ -14,7 +14,6 @@ import android.widget.TextView;
  */
 public class ServerDialog extends DialogFragment {
     private TextView mName, mIp, mPort;
-
     private IpActivity mActivity;
 
     public void setReaders(IpActivity activity) {
@@ -57,8 +56,9 @@ public class ServerDialog extends DialogFragment {
 
         String ip = mIp.getText().toString();
         int port = Integer.valueOf(mPort.getText().toString());
+        String name = mName.getText().toString();
 
-        StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, ip, port);
+        StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, name, ip, port);
         mActivity.mReaders.add(r);
         r.resume();
         dismiss();

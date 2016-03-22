@@ -2,7 +2,9 @@ package com.dorjesoft.hwinforeader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -26,6 +30,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private static final String PREFS = "HwinfoReaders";
     private static final String PREFS_IP = "reader_ip_";
     private static final String PREFS_PORT = "reader_port_";
+    private static final String PREFS_NAME = "reader_name_";
     private static final String PREFS_NUM_READERS = "num_readers";
 
     protected int mMaxId = 0;
@@ -38,22 +43,24 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private final String PREFS_SHOW_AVG = "show_avg";
     private boolean mShowMin, mShowMax, mShowAvg;
 
-    private final int COLUMN_MIN = 1;
-    private final int COLUMN_MAX = 2;
-    private final int COLUMN_AVG = 3;
+    private static final int COLUMN_MIN = 2;
+    private static final int COLUMN_MAX = 3;
+    private static final int COLUMN_AVG = 4;
+    private static final int NUM_COLUMNS = 5;
 
     private FragmentManager fm = getSupportFragmentManager();
 
     protected void loadReaders() {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 
-        //  int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
-        int numReaders = 0;
+        int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
+        // int numReaders = 0;
         for (int i = 0; i < numReaders; i++) {
             String ip = prefs.getString(PREFS_IP + i, null);
             int port = prefs.getInt(PREFS_PORT + i, -1);
+            String name = prefs.getString(PREFS_NAME + i, null);
 
-            mReaders.add(new StandardReader(++mMaxId, this, ip, port));
+            mReaders.add(new StandardReader(++mMaxId, this, name, ip, port));
         }
 
         mShowMin = prefs.getBoolean(PREFS_SHOW_MIN, false);
@@ -74,6 +81,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             StandardReader r = mReaders.get(i);
             editor.putString(PREFS_IP + i, r.getIp());
             editor.putInt(PREFS_PORT + i, r.getPort());
+            editor.putString(PREFS_NAME + i, r.getName());
         }
 
         editor.putBoolean(PREFS_SHOW_MIN, mShowMin);
@@ -116,6 +124,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
         for (StandardReader r : mReaders) {
             r.resume();
+            // todo: resume chronometer
         }
     }
 
@@ -128,6 +137,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
         for (StandardReader r : mReaders) {
             r.pause();
+            // todo: pause chronometer
         }
 
         saveReaders();
@@ -175,7 +185,36 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         return super.onOptionsItemSelected(item);
     }
 
-    private void createHwinfo(Hwinfo hwinfo) {
+    public final static String CHRONOMETER_TAG = "tag_chronometer";
+
+    private void tryCreateHwinfo(Hwinfo hwinfo) {
+        if (mTable.findViewWithTag(CHRONOMETER_TAG) != null) {
+            return;
+        }
+
+        {
+            TableRow tr = new TableRow(this);
+
+            TextView tv = new TextView(this);
+            tv.setText(hwinfo.getName());
+            tv.setTypeface(Typeface.DEFAULT_BOLD);
+
+            tr.addView(tv);
+
+
+            Chronometer c = new Chronometer(this);
+            c.setTag(CHRONOMETER_TAG);
+            c.start();
+            tr.addView(c);
+
+            // TableRow.LayoutParams params = new TableRow.LayoutParams();
+            //params.width = ViewGroup.LayoutParams.FILL_PARENT;
+            //params.span = 4;
+            //params.weight = 1;
+            //tv.setLayoutParams(params);
+            mTable.addView(tr);
+        }
+
         for (Reading r : hwinfo.getReadings()) {
             TableRow tr = new TableRow(this);
 
@@ -209,13 +248,14 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     }
 
     protected void mySetHwinfo(Hwinfo hwinfo) {
+
+        tryCreateHwinfo(hwinfo);
+
+        Chronometer c = (Chronometer) mTable.findViewWithTag(CHRONOMETER_TAG);
+        c.setBase(SystemClock.elapsedRealtime());
+
         for (Reading r : hwinfo.getReadings()) {
             TextView tv = (TextView) mTable.findViewWithTag(r.getLabelOrig());
-
-            if (tv == null) {
-                createHwinfo(hwinfo);
-                tv = (TextView) mTable.findViewWithTag(r.getLabelOrig());
-            }
 
             tv.setText(r.format());
 
