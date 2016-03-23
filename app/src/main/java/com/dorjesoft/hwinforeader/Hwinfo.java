@@ -56,6 +56,10 @@ public class Hwinfo {
         }
     }
 
+    public StandardReader getReader() {
+        return mReader;
+    }
+
     public Reading[] getReadings() {
         return mReadings;
     }

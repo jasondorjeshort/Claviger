@@ -185,10 +185,14 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         return super.onOptionsItemSelected(item);
     }
 
+    public String getServerTag(Hwinfo hwinfo) {
+        return "hwinfo_" + hwinfo.getReader().getId() + "_";
+    }
     public final static String CHRONOMETER_TAG = "tag_chronometer";
 
     private void tryCreateHwinfo(Hwinfo hwinfo) {
-        if (mTable.findViewWithTag(CHRONOMETER_TAG) != null) {
+        String tag = getServerTag(hwinfo);
+        if (mTable.findViewWithTag(tag + CHRONOMETER_TAG) != null) {
             return;
         }
 
@@ -203,7 +207,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
 
             Chronometer c = new Chronometer(this);
-            c.setTag(CHRONOMETER_TAG);
+            c.setTag(tag + CHRONOMETER_TAG);
             c.start();
             tr.addView(c);
 
@@ -223,22 +227,22 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             tr.addView(tv);
 
             tv = new TextView(this);
-            tv.setTag(r.getLabelOrig());
+            tv.setTag(tag + r.getLabelOrig());
             tv.setText(r.format());
             tr.addView(tv);
 
             tv = new TextView(this);
-            tv.setTag(r.getLabelOrig() + " min");
+            tv.setTag(tag + r.getLabelOrig() + " min");
             tv.setText(r.formatMin());
             tr.addView(tv);
 
             tv = new TextView(this);
-            tv.setTag(r.getLabelOrig() + " max");
+            tv.setTag(tag + r.getLabelOrig() + " max");
             tv.setText(r.formatMax());
             tr.addView(tv);
 
             tv = new TextView(this);
-            tv.setTag(r.getLabelOrig() + " avg");
+            tv.setTag(tag + r.getLabelOrig() + " avg");
             tv.setText(r.formatAvg());
             tr.addView(tv);
 
@@ -251,21 +255,22 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
         tryCreateHwinfo(hwinfo);
 
-        Chronometer c = (Chronometer) mTable.findViewWithTag(CHRONOMETER_TAG);
+        String tag = getServerTag(hwinfo);
+        Chronometer c = (Chronometer) mTable.findViewWithTag(tag + CHRONOMETER_TAG);
         c.setBase(SystemClock.elapsedRealtime());
 
         for (Reading r : hwinfo.getReadings()) {
-            TextView tv = (TextView) mTable.findViewWithTag(r.getLabelOrig());
+            TextView tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig());
 
             tv.setText(r.format());
 
-            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " min");
+            tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " min");
             tv.setText(r.formatMin());
 
-            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " max");
+            tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " max");
             tv.setText(r.formatMax());
 
-            tv = (TextView) mTable.findViewWithTag(r.getLabelOrig() + " avg");
+            tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " avg");
             tv.setText(r.formatAvg());
         }
     }
