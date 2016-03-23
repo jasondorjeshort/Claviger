@@ -5,7 +5,7 @@ Tool for monitoring hwinfo data from a PC over LAN.
 
 Hwinfo can be found at http://www.hwinfo.com/.  Support forums [here](http://www.hwinfo.com/forum/Thread-hwinfo-android).
 
-APK files will be released shortly at [Dorje's github repository](https://github.com/jasondorjeshort/hwinfo-android).
+APK files are available at [Dorje's github repository](https://github.com/jasondorjeshort/hwinfo-android).
 
 -----
 
