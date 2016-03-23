@@ -3,24 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dorjesoft.hwinforeader.IpActivity">
     <item
+        android:id="@+id/action_add_listener"
+        android:icon="@android:drawable/ic_menu_add"
+        android:orderInCategory="100"
+        android:title="Add listener..."
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_show_min"
         android:checkable="true"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:orderInCategory="100"
+        android:orderInCategory="105"
         android:title="Show Min"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_show_max"
         android:checkable="true"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:orderInCategory="101"
+        android:orderInCategory="106"
         android:title="Show Max"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_show_avg"
         android:checkable="true"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:orderInCategory="102"
+        android:orderInCategory="107"
         android:title="Show Avg"
         app:showAsAction="never" />
 </menu>

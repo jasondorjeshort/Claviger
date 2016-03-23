@@ -78,9 +78,14 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         mShowMax = prefs.getBoolean(PREFS_SHOW_MAX, false);
         mShowAvg = prefs.getBoolean(PREFS_SHOW_AVG, false);
 
-        mTable.setColumnCollapsed(COLUMN_MIN, !mShowMin);
-        mTable.setColumnCollapsed(COLUMN_MAX, !mShowMax);
-        mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
+        mTable.post(new Runnable() {
+            @Override
+            public void run() {
+                mTable.setColumnCollapsed(COLUMN_MIN, !mShowMin);
+                mTable.setColumnCollapsed(COLUMN_MAX, !mShowMax);
+                mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
+            }
+        });
     }
 
     protected void saveReaders() {
@@ -102,6 +107,13 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         editor.apply();
     }
 
+    public void addServer() {
+        ServerDialog dFragment = new ServerDialog();
+        dFragment.setReaders(IpActivity.this);
+        // Show DialogFragment
+        dFragment.show(fm, "Dialog Fragment");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,17 +122,6 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         setSupportActionBar(toolbar);
 
         Log.d("hwinfo", "Hwinfo create.");
-
-        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ServerDialog dFragment = new ServerDialog();
-                dFragment.setReaders(IpActivity.this);
-                // Show DialogFragment
-                dFragment.show(fm, "Dialog Fragment");
-            }
-        });
 
         mTable = (TableLayout) findViewById(R.id.table);
 
@@ -190,6 +191,10 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             mShowAvg = !mShowAvg;
             item.setChecked(mShowAvg);
             mTable.setColumnCollapsed(COLUMN_AVG, !mShowAvg);
+            return true;
+        }
+        if (id == R.id.action_add_listener) {
+            addServer();
             return true;
         }
 
