@@ -95,7 +95,7 @@ public class ServerDialog extends DialogFragment {
             // add new server
             boolean dup = false;
             for (StandardReader r : mActivity.mReaders) {
-                if (r.getIp().equals(ip) || r.getPort() == port) {
+                if (r.getIp().equals(ip) && r.getPort() == port) {
                     dup = true;
                     break;
                 }
