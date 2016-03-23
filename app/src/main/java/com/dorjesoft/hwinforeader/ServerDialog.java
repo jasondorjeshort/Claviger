@@ -16,9 +16,11 @@ import android.widget.TextView;
 public class ServerDialog extends DialogFragment {
     private TextView mName, mIp, mPort;
     private IpActivity mActivity;
+    private StandardReader mReader;
 
-    public void setReaders(IpActivity activity) {
+    public void setData(IpActivity activity, StandardReader reader) {
         mActivity = activity;
+        mReader = reader;
     }
 
     @Override
@@ -32,6 +34,12 @@ public class ServerDialog extends DialogFragment {
         mName = (TextView) rootView.findViewById(R.id.reader_name);
         mIp = (TextView) rootView.findViewById(R.id.reader_ip);
         mPort = (TextView) rootView.findViewById(R.id.reader_port);
+
+        if (mReader != null) {
+            mName.setText(mReader.getName());
+            mIp.setText(mReader.getIp());
+            mPort.setText(mReader.getPort());
+        }
 
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override

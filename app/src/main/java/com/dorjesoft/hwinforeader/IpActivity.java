@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -209,6 +210,8 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     private void tryCreateHwinfo(Hwinfo hwinfo) {
         String tag = getServerTag(hwinfo);
+        final StandardReader reader = hwinfo.getReader();
+
         if (mTable.findViewWithTag(tag + CHRONOMETER_TAG) != null) {
             return;
         }
@@ -216,9 +219,19 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         {
             TableRow tr = new TableRow(this);
 
-            TextView tv = new TextView(this);
+            Button tv = new Button(this);
             tv.setText(hwinfo.getName());
             tv.setTypeface(Typeface.DEFAULT_BOLD);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ServerDialog dFragment = new ServerDialog();
+                    dFragment.setReader(reader);
+                    dFragment.setReaders(IpActivity.this);
+                    // Show DialogFragment
+                    dFragment.show(fm, "Dialog Fragment");
+                }
+            });
 
             tr.addView(tv);
 
