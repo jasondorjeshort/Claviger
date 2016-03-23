@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,11 +57,21 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
         // int numReaders = 0;
         for (int i = 0; i < numReaders; i++) {
-            String ip = prefs.getString(PREFS_IP + i, null);
+            String ip = prefs.getString(PREFS_IP + i, null).trim();
             int port = prefs.getInt(PREFS_PORT + i, -1);
-            String name = prefs.getString(PREFS_NAME + i, null);
+            String name = prefs.getString(PREFS_NAME + i, null).trim();
 
-            mReaders.add(new StandardReader(++mMaxId, this, name, ip, port));
+            boolean dup = false;
+            for (StandardReader r : mReaders) {
+                if (r.getPort() == port && r.getIp().equals(ip)) {
+                    dup = true;
+                    break;
+                }
+            }
+
+            if (!dup) {
+                mReaders.add(new StandardReader(++mMaxId, this, name, ip, port));
+            }
         }
 
         mShowMin = prefs.getBoolean(PREFS_SHOW_MIN, false);
@@ -188,6 +199,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     public String getServerTag(Hwinfo hwinfo) {
         return "hwinfo_" + hwinfo.getReader().getId() + "_";
     }
+
     public final static String CHRONOMETER_TAG = "tag_chronometer";
 
     private void tryCreateHwinfo(Hwinfo hwinfo) {

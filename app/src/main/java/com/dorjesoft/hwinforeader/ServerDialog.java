@@ -1,6 +1,7 @@
 package com.dorjesoft.hwinforeader;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,13 +55,29 @@ public class ServerDialog extends DialogFragment {
     protected void add() {
         Log.d("hwinfo", "IP: " + mIp.getText() + "; port: " + mPort.getText());
 
-        String ip = mIp.getText().toString();
-        int port = Integer.valueOf(mPort.getText().toString());
-        String name = mName.getText().toString();
+        String ip = mIp.getText().toString().trim();
+        int port = Integer.valueOf(mPort.getText().toString().trim());
+        String name = mName.getText().toString().trim();
 
-        StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, name, ip, port);
-        mActivity.mReaders.add(r);
-        r.resume();
+
+        boolean dup = false;
+        for (StandardReader r : mActivity.mReaders) {
+            if (r.getIp().equals(ip) || r.getPort() == port) {
+                dup = true;
+                break;
+            }
+        }
+
+        if (dup) {
+            Snackbar.make(mActivity.findViewById(android.R.id.content), "Could not add duplicate listener.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        } else {
+            StandardReader r = new StandardReader(++mActivity.mMaxId, mActivity, name, ip, port);
+            Snackbar.make(mActivity.findViewById(android.R.id.content), "Added server listener.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            mActivity.mReaders.add(r);
+            r.resume();
+        }
         dismiss();
     }
 
