@@ -12,12 +12,12 @@ import java.net.Socket;
  */
 public class StandardReader {
     private final Hwinfo.Callback mCallback;
-    private final String mIp;
-    private final int mPort;
+    private String mIp;
+    private int mPort;
     private Thread mThread;
     private boolean mRunning = false;
     private final int mId;
-    private final String mName;
+    private String mName;
 
     public String getIp() {
         return mIp;
@@ -130,6 +130,18 @@ public class StandardReader {
             mRunning = false;
         }
         mThread.interrupt();
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public void setPort(int port) {
+        mPort = port;
+    }
+
+    public void setIp(String ip) {
+        mIp = ip;
     }
 
     public StandardReader(int id, Hwinfo.Callback cb, String name, String ip, int port) {

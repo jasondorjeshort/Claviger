@@ -38,7 +38,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     protected int mMaxId = 0;
     protected final List<StandardReader> mReaders = new LinkedList<>();
 
-    private TableLayout mTable;
+    protected TableLayout mTable;
 
     private final String PREFS_SHOW_MIN = "show_min";
     private final String PREFS_SHOW_MAX = "show_max";
@@ -110,7 +110,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     public void addServer() {
         ServerDialog dFragment = new ServerDialog();
-        dFragment.setReaders(IpActivity.this);
+        dFragment.setData(IpActivity.this, null);
         // Show DialogFragment
         dFragment.show(fm, "Dialog Fragment");
     }
@@ -226,8 +226,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
                 @Override
                 public void onClick(View view) {
                     ServerDialog dFragment = new ServerDialog();
-                    dFragment.setReader(reader);
-                    dFragment.setReaders(IpActivity.this);
+                    dFragment.setData(IpActivity.this, reader);
                     // Show DialogFragment
                     dFragment.show(fm, "Dialog Fragment");
                 }

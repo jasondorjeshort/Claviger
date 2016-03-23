@@ -54,19 +54,28 @@
         android:text="27007" />
 
     <Button
-        android:id="@+id/reader_button_add"
+        android:id="@+id/reader_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/reader_port_text"
+        android:text="Save" />
+
+    <Button
+        android:id="@+id/reader_button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/reader_port_text"
-        android:layout_alignParentLeft="true"
-        android:text="Add Server" />
+        android:layout_toRightOf="@+id/reader_button_save"
+        android:layout_toLeftOf="@+id/reader_button_cancel"
+        android:text="Delete" />
 
     <Button
         android:id="@+id/reader_button_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/reader_port_text"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/reader_port_text"
         android:text="Cancel" />
 
 </RelativeLayout>
