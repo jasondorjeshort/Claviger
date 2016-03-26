@@ -17,6 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -208,6 +211,15 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
 
     public final static String CHRONOMETER_TAG = "tag_chronometer";
 
+    private void changeLayoutParams(View v, int weight) {
+        TableRow.LayoutParams lp = (TableRow.LayoutParams) v.getLayoutParams();
+        lp.width = 0;
+        lp.weight = weight;
+        lp.leftMargin = Math.max(lp.leftMargin, 8);
+        lp.rightMargin = Math.max(lp.rightMargin, 8);
+        v.setLayoutParams(lp);
+    }
+
     private void tryCreateHwinfo(Hwinfo hwinfo) {
         String tag = getServerTag(hwinfo);
         final StandardReader reader = hwinfo.getReader();
@@ -216,29 +228,51 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             return;
         }
 
+
         {
             TableRow tr = new TableRow(this);
 
-            Button tv = new Button(this);
-            tv.setText(hwinfo.getName());
-            tv.setTypeface(Typeface.DEFAULT_BOLD);
-            tv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ServerDialog dFragment = new ServerDialog();
-                    dFragment.setData(IpActivity.this, reader);
-                    // Show DialogFragment
-                    dFragment.show(fm, "Dialog Fragment");
-                }
-            });
+            {
+                Button tv = new Button(this);
+                tv.setText(hwinfo.getName());
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ServerDialog dFragment = new ServerDialog();
+                        dFragment.setData(IpActivity.this, reader);
+                        // Show DialogFragment
+                        dFragment.show(fm, "Dialog Fragment");
+                    }
+                });
+                tv.setSingleLine(true);
+                tr.addView(tv);
+                changeLayoutParams(tv, 2);
+            }
 
-            tr.addView(tv);
+            {
+                Chronometer c = new Chronometer(this);
+                c.setTag(tag + CHRONOMETER_TAG);
+                c.start();
+                c.setSingleLine(true);
+                tr.addView(c);
+                changeLayoutParams(c, 1);
+            }
 
-
-            Chronometer c = new Chronometer(this);
-            c.setTag(tag + CHRONOMETER_TAG);
-            c.start();
-            tr.addView(c);
+            for (int i = 0; i < 3; i++) {
+                final Chronometer chrono = new Chronometer(this);
+                chrono.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        chrono.setBase(SystemClock.elapsedRealtime());
+                        chrono.start();
+                    }
+                });
+                chrono.setText("Tap");
+                chrono.setSingleLine(true);
+                tr.addView(chrono);
+                changeLayoutParams(chrono, 1);
+            }
 
             // TableRow.LayoutParams params = new TableRow.LayoutParams();
             //params.width = ViewGroup.LayoutParams.FILL_PARENT;
@@ -251,30 +285,51 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         for (Reading r : hwinfo.getReadings()) {
             TableRow tr = new TableRow(this);
 
-            TextView tv = new TextView(this);
-            tv.setText(r.getLabelUser());
-            tr.addView(tv);
 
-            tv = new TextView(this);
-            tv.setTag(tag + r.getLabelOrig());
-            tv.setText(r.format());
-            tr.addView(tv);
+            {
+                HorizontalScrollView sv = new HorizontalScrollView(this);
+                TextView tv = new TextView(this);
+                tv.setText(r.getLabelUser());
+                tv.setSingleLine(true);
+                tv.setHorizontallyScrolling(true);
+                sv.addView(tv);
+                tr.addView(sv);
+                changeLayoutParams(sv, 2);
+            }
 
-            tv = new TextView(this);
-            tv.setTag(tag + r.getLabelOrig() + " min");
-            tv.setText(r.formatMin());
-            tr.addView(tv);
+            {
+                TextView tv = new TextView(this);
+                tv.setTag(tag + r.getLabelOrig());
+                tv.setText(r.format());
+                tr.addView(tv);
+                tv.setSingleLine(true);
+                changeLayoutParams(tv, 1);
+            }
 
-            tv = new TextView(this);
-            tv.setTag(tag + r.getLabelOrig() + " max");
-            tv.setText(r.formatMax());
-            tr.addView(tv);
-
-            tv = new TextView(this);
-            tv.setTag(tag + r.getLabelOrig() + " avg");
-            tv.setText(r.formatAvg());
-            tr.addView(tv);
-
+            {
+                TextView tv = new TextView(this);
+                tv.setTag(tag + r.getLabelOrig() + " min");
+                tv.setText(r.formatMin());
+                tr.addView(tv);
+                tv.setSingleLine(true);
+                changeLayoutParams(tv, 1);
+            }
+            {
+                TextView tv = new TextView(this);
+                tv.setTag(tag + r.getLabelOrig() + " max");
+                tv.setText(r.formatMax());
+                tr.addView(tv);
+                tv.setSingleLine(true);
+                changeLayoutParams(tv, 1);
+            }
+            {
+                TextView tv = new TextView(this);
+                tv.setTag(tag + r.getLabelOrig() + " avg");
+                tv.setText(r.formatAvg());
+                tr.addView(tv);
+                tv.setSingleLine(true);
+                changeLayoutParams(tv, 1);
+            }
             mTable.addView(tr);
         }
 
