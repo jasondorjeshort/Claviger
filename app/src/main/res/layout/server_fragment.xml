@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:padding="10dp"
-        android:text="Name" />
+        android:text="@string/server_name" />
 
     <EditText
         android:id="@+id/reader_name"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/reader_name_text"
         android:inputType="text"
-        android:text="An Hwinfo Server" />
+        android:text="@string/server_default" />
 
     <TextView
         android:id="@+id/reader_ip_text"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/reader_name"
         android:padding="10dp"
-        android:text="IP: " />
+        android:text="@string/server_ip" />
 
     <EditText
         android:id="@+id/reader_ip"
@@ -34,7 +34,7 @@
         android:layout_below="@+id/reader_name"
         android:layout_toRightOf="@+id/reader_ip_text"
         android:inputType="text"
-        android:text="192.168.1.100" />
+        android:text="@string/server_default_ip" />
 
     <TextView
         android:id="@+id/reader_port_text"
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/reader_ip_text"
         android:padding="10dp"
-        android:text="Port" />
+        android:text="@string/server_port" />
 
     <EditText
         android:id="@+id/reader_port"
@@ -51,7 +51,7 @@
         android:layout_below="@+id/reader_ip_text"
         android:layout_toRightOf="@+id/reader_port_text"
         android:inputType="number"
-        android:text="27007" />
+        android:text="@string/server_default_port" />
 
     <Button
         android:id="@+id/reader_button_save"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/reader_port_text"
-        android:text="Save" />
+        android:text="@string/save" />
 
     <Button
         android:id="@+id/reader_button_delete"
@@ -68,7 +68,7 @@
         android:layout_below="@+id/reader_port_text"
         android:layout_toRightOf="@+id/reader_button_save"
         android:layout_toLeftOf="@+id/reader_button_cancel"
-        android:text="Delete" />
+        android:text="@string/delete" />
 
     <Button
         android:id="@+id/reader_button_cancel"
@@ -76,6 +76,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/reader_port_text"
-        android:text="Cancel" />
+        android:text="@string/cancel" />
 
 </RelativeLayout>
