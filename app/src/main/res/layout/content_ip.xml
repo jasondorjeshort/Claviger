@@ -19,42 +19,42 @@
         android:stretchColumns="1">
 
 
-        <TableRow>
+        <TableRow tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:singleLine="true"
-                android:text="Name" />
+                android:text="@string/name" />
 
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="Curr" />
+                android:text="@string/curr" />
 
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="Min" />
+                android:text="@string/min" />
 
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="Max" />
+                android:text="@string/max" />
 
             <TextView
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:text="Avg" />
+                android:text="@string/avg" />
         </TableRow>
     </TableLayout>
 </ScrollView>

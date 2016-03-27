@@ -1,5 +1,7 @@
 package com.dorjesoft.hwinforeader;
 
+import android.content.Context;
+
 /**
  * Created by jdorje on 2/6/2016. Released under the GNU General Public Licence.
  */
@@ -14,7 +16,7 @@ public class Reading {
 
     // creates a reading from a standard reader binary data
     public Reading(byte[] b, int offset) {
-        mType = Type.fromInt(NetUtils.scanDwordInt(b, offset + 0));
+        mType = Type.fromInt(NetUtils.scanDwordInt(b, offset));
         mSensorIndex = (int) NetUtils.scanDwordInt(b, offset + 4);
         mReadingId = (int) NetUtils.scanDwordInt(b, offset + 8);
         mLabelOrig = NetUtils.scanString(b, offset + 12, 128);
@@ -34,7 +36,7 @@ public class Reading {
                 + mLabelUser + "|" + mUnits + "|" + mValue + "|" + mMin + "|" + mMax + "|" + mAvg;
     }
 
-    private static enum Type {
+    private  enum Type {
         SENSOR_TYPE_NONE(0), SENSOR_TYPE_TEMP(1), SENSOR_TYPE_VOLT(2), SENSOR_TYPE_FAN(3),
         SENSOR_TYPE_CURRENT(4), SENSOR_TYPE_POWER(5), SENSOR_TYPE_CLOCK(6),
         SENSOR_TYPE_USAGE(7), SENSOR_TYPE_OTHER(8);
@@ -55,11 +57,7 @@ public class Reading {
         }
     }
 
-    public String format3(double value) {
-        return String.valueOf(Math.round(value * 1000) / 1000f);
-    }
-
-    public String format(double value) {
+    public String format(Context c, double value) {
         switch (mType) {
             case SENSOR_TYPE_TEMP:
                 return String.format("%3.1f%s", Math.round(value * 10) / 10f, mUnits);
@@ -78,7 +76,7 @@ public class Reading {
             case SENSOR_TYPE_OTHER:
                 if (mUnits.equals("Yes/No")) {
                     // TODO: this is rather a workaround
-                    return value != 0 ? "Yes" : "No";
+                    return value != 0 ? c.getString(R.string.yes) : c.getString(R.string.no);
                 }
                 return String.format("%3.1f%s", Math.round(value * 10) / 10f, mUnits);
             case SENSOR_TYPE_NONE:
@@ -89,20 +87,20 @@ public class Reading {
         return "-";
     }
 
-    public String format() {
-        return format(mValue);
+    public String format(Context c) {
+        return format(c, mValue);
     }
 
-    public String formatMin() {
-        return format(mMin);
+    public String formatMin(Context c) {
+        return format(c, mMin);
     }
 
-    public String formatMax() {
-        return format(mMax);
+    public String formatMax(Context c) {
+        return format(c, mMax);
     }
 
-    public String formatAvg() {
-        return format(mAvg);
+    public String formatAvg(Context c) {
+        return format(c, mAvg);
     }
 
     public String getLabelUser() {

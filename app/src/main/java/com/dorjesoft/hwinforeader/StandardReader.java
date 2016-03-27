@@ -52,25 +52,27 @@ public class StandardReader {
 
         Log.d("hwinfo", packet + " : " + cmd + " + " + len);
 
-        if (packet.equals("HWRR")) {
-            for (int i = 0; i < 30; i++) {
-                NetUtils.readDwordInt(is);
-            }
-        } else if (packet.equals("HWRP")) {
-            byte[] b = new byte[(int) len];
+        switch (packet) {
+            case "HWRR":
+                for (int i = 0; i < 30; i++) {
+                    NetUtils.readDwordInt(is);
+                }
+                break;
+            case "HWRP":
+                byte[] b = new byte[(int) len];
 
-            NetUtils.forceRead(is, b);
+                NetUtils.forceRead(is, b);
 
-            Log.d("hwinfo", "Read full hwrp of length " + len);
+                Log.d("hwinfo", "Read full hwrp of length " + len);
 
-            Hwinfo hwinfo = new Hwinfo(this, b);
+                Hwinfo hwinfo = new Hwinfo(this, b);
 
-            mCallback.setHwinfo(hwinfo);
+                mCallback.setHwinfo(hwinfo);
 
-            return true;
-        } else {
-            Log.d("hwinfo", "Unknown packet " + packet);
-            throw new RuntimeException();
+                return true;
+            default:
+                Log.d("hwinfo", "Unknown packet " + packet);
+                throw new RuntimeException();
         }
 
         return false;

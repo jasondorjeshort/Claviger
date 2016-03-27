@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,12 +12,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -51,7 +46,6 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
     private static final int COLUMN_MIN = 2;
     private static final int COLUMN_MAX = 3;
     private static final int COLUMN_AVG = 4;
-    private static final int NUM_COLUMNS = 5;
 
     private FragmentManager fm = getSupportFragmentManager();
 
@@ -59,11 +53,16 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         SharedPreferences prefs = getSharedPreferences(PREFS, Context.MODE_PRIVATE);
 
         int numReaders = prefs.getInt(PREFS_NUM_READERS, 0);
-        // int numReaders = 0;
         for (int i = 0; i < numReaders; i++) {
-            String ip = prefs.getString(PREFS_IP + i, null).trim();
+            String ip = prefs.getString(PREFS_IP + i, null);
             int port = prefs.getInt(PREFS_PORT + i, -1);
-            String name = prefs.getString(PREFS_NAME + i, null).trim();
+            String name = prefs.getString(PREFS_NAME + i, null);
+
+            if (ip == null || name == null || port == -1) {
+                continue;
+            }
+            ip = ip.trim();
+            name = name.trim();
 
             boolean dup = false;
             for (StandardReader r : mReaders) {
@@ -268,7 +267,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
                         chrono.start();
                     }
                 });
-                chrono.setText("Tap");
+                chrono.setText(R.string.tap);
                 chrono.setSingleLine(true);
                 tr.addView(chrono);
                 changeLayoutParams(chrono, 1);
@@ -300,7 +299,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             {
                 TextView tv = new TextView(this);
                 tv.setTag(tag + r.getLabelOrig());
-                tv.setText(r.format());
+                tv.setText(r.format(this));
                 tr.addView(tv);
                 tv.setSingleLine(true);
                 changeLayoutParams(tv, 1);
@@ -309,7 +308,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             {
                 TextView tv = new TextView(this);
                 tv.setTag(tag + r.getLabelOrig() + " min");
-                tv.setText(r.formatMin());
+                tv.setText(r.formatMin(this));
                 tr.addView(tv);
                 tv.setSingleLine(true);
                 changeLayoutParams(tv, 1);
@@ -317,7 +316,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             {
                 TextView tv = new TextView(this);
                 tv.setTag(tag + r.getLabelOrig() + " max");
-                tv.setText(r.formatMax());
+                tv.setText(r.formatMax(this));
                 tr.addView(tv);
                 tv.setSingleLine(true);
                 changeLayoutParams(tv, 1);
@@ -325,7 +324,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
             {
                 TextView tv = new TextView(this);
                 tv.setTag(tag + r.getLabelOrig() + " avg");
-                tv.setText(r.formatAvg());
+                tv.setText(r.formatAvg(this));
                 tr.addView(tv);
                 tv.setSingleLine(true);
                 changeLayoutParams(tv, 1);
@@ -351,16 +350,16 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
                 continue;
             }
 
-            tv.setText(r.format());
+            tv.setText(r.format(this));
 
             tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " min");
-            tv.setText(r.formatMin());
+            tv.setText(r.formatMin(this));
 
             tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " max");
-            tv.setText(r.formatMax());
+            tv.setText(r.formatMax(this));
 
             tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " avg");
-            tv.setText(r.formatAvg());
+            tv.setText(r.formatAvg(this));
         }
     }
 
