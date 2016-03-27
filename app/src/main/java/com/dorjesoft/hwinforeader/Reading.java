@@ -76,6 +76,10 @@ public class Reading {
             case SENSOR_TYPE_USAGE:
                 return String.format("%3.3f%s", Math.round(value * 1000) / 1000f, mUnits);
             case SENSOR_TYPE_OTHER:
+                if (mUnits.equals("Yes/No")) {
+                    // TODO: this is rather a workaround
+                    return value != 0 ? "Yes" : "No";
+                }
                 return String.format("%3.1f%s", Math.round(value * 10) / 10f, mUnits);
             case SENSOR_TYPE_NONE:
             default:
