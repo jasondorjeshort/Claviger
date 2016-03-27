@@ -346,6 +346,11 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         for (Reading r : hwinfo.getReadings()) {
             TextView tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig());
 
+            if (tv == null) {
+                // TODO: this happens if monitoring is enabled after connection
+                continue;
+            }
+
             tv.setText(r.format());
 
             tv = (TextView) mTable.findViewWithTag(tag + r.getLabelOrig() + " min");
