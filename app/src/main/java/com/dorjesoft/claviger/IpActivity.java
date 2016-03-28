@@ -1,4 +1,4 @@
-package com.dorjesoft.hwinforeader;
+package com.dorjesoft.claviger;
 
 import android.content.Context;
 import android.content.SharedPreferences;

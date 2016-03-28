@@ -1,4 +1,4 @@
-package com.dorjesoft.hwinforeader;
+package com.dorjesoft.claviger;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
