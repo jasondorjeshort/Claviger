@@ -78,7 +78,7 @@ public class IpActivity extends AppCompatActivity implements Hwinfo.Callback {
         }
 
         mShowMin = prefs.getBoolean(PREFS_SHOW_MIN, false);
-        mShowMax = prefs.getBoolean(PREFS_SHOW_MAX, false);
+        mShowMax = prefs.getBoolean(PREFS_SHOW_MAX, true);
         mShowAvg = prefs.getBoolean(PREFS_SHOW_AVG, false);
 
         mTable.post(new Runnable() {
